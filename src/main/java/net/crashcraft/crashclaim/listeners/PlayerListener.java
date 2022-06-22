@@ -74,7 +74,7 @@ public class PlayerListener implements Listener {
 
                     e.setCancelled(true);
                     visuals.sendAlert(player, Localization.PVP_DISABLED_INSIDE_CLAIM.getMessage(player));
-                } else if (!helper.hasPermission(shooter.getUniqueId(), livingEntity.getLocation(), PermissionRoute.ENTITIES)){
+                } else if (!(livingEntity instanceof Monster) && !helper.hasPermission(shooter.getUniqueId(), livingEntity.getLocation(), PermissionRoute.ENTITIES)){
                     e.setCancelled(true);
                     visuals.sendAlert(shooter, Localization.ALERT__NO_PERMISSIONS__ENTITIES.getMessage(shooter));
                 }
@@ -421,7 +421,7 @@ public class PlayerListener implements Listener {
         if (e.getDamager() instanceof Projectile arrow){
             Location location = arrow.getLocation();
             if (arrow.getShooter() instanceof Player player){
-                if (!helper.hasPermission(player.getUniqueId(), location, PermissionRoute.ENTITIES)){
+                if (!(e.getEntity() instanceof Monster) && !helper.hasPermission(player.getUniqueId(), location, PermissionRoute.ENTITIES)){
                     e.setCancelled(true);
                     visuals.sendAlert(player, Localization.ALERT__NO_PERMISSIONS__ENTITIES.getMessage(player));
                 }
@@ -436,7 +436,7 @@ public class PlayerListener implements Listener {
                     e.setCancelled(true);
                     visuals.sendAlert(player, Localization.ALERT__NO_PERMISSIONS__BUILD.getMessage(player));
                 }
-            } else if (!helper.hasPermission(player.getUniqueId(), e.getEntity().getLocation(), PermissionRoute.ENTITIES)){
+            } else if (!(e.getEntity() instanceof Monster) && !helper.hasPermission(player.getUniqueId(), e.getEntity().getLocation(), PermissionRoute.ENTITIES)){
                 e.setCancelled(true);
                 visuals.sendAlert(player, Localization.ALERT__NO_PERMISSIONS__ENTITIES.getMessage(player));
             }
@@ -574,7 +574,7 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if (!helper.hasPermission(player.getUniqueId(), e.getRightClicked().getLocation(), PermissionRoute.ENTITIES)){
+        if (!(e.getRightClicked() instanceof Monster) &&!helper.hasPermission(player.getUniqueId(), e.getRightClicked().getLocation(), PermissionRoute.ENTITIES)){
             e.setCancelled(true);
             visuals.sendAlert(player, Localization.ALERT__NO_PERMISSIONS__ENTITIES.getMessage(player));
         }

@@ -153,7 +153,7 @@ public enum Localization {
 
     NEW_CLAIM__INFO("<yellow>Click two corners to form a new claim. To resize an existing claim click a corner or side to resize in that direction."),
     NEW_CLAIM__CLICK_CORNER("<green>Click an opposite corner to form a new claim."),
-    NEW_CLAIM__MIN_SIZE("<red>A claim has to be at least a 5x5."),
+    NEW_CLAIM__MIN_SIZE("<red>A claim has to be at least a 2x2."),
     NEW_CLAIM__OVERLAPPING("<red>You cannot claim over an existing claim."),
     NEW_CLAIM__OTHER_ERROR("<red>You cannot claim because of another region or plugin wont allow it."),
     NEW_CLAIM__NOT_ENOUGH_BALANCE("<red>You need <price> coins to claim that area."),
@@ -171,7 +171,7 @@ public enum Localization {
     NEW_SUBCLAIM__CLICK_CORNER("<green>Click an opposite corner to form a sub-claim"),
     NEW_SUBCLAIM__NOT_INSIDE_PARENT("<red>Sub-Claims can only be formed inside of a parent claim."),
     NEW_SUBCLAIM__SUCCESS("<green>Successfully created sub-claim."),
-    NEW_SUBCLAIM__MIN_AREA("<red>A sub-claim needs to be at least a 5x5 area."),
+    NEW_SUBCLAIM__MIN_AREA("<red>A sub-claim needs to be at least a 2x2 area."),
     NEW_SUBCLAIM__NEED_PARENT("<red>You cannot form a sub-claim outside of a parent claim."),
     NEW_SUBCLAIM__NO_OVERLAP("<red>You cannot overlap an existing sub-claim."),
     NEW_SUBCLAIM__ERROR("<red>There was an error creating the sub-claim."),

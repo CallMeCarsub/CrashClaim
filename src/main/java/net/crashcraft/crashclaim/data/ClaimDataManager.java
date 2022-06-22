@@ -344,7 +344,7 @@ public class ClaimDataManager implements Listener {
     }
 
     public boolean isTooSmall(int maxX, int maxZ, int minX, int minZ){
-        return ((maxX - minX) < 4 || (maxZ - minZ) < 4);
+        return ((maxX - minX) < 2 || (maxZ - minZ) < 2);
     }
 
     public boolean checkOverLapSurroudningClaims(int claimid, int maxX, int maxZ, int minX, int minZ, UUID world){
