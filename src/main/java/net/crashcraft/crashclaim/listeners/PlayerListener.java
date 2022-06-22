@@ -10,6 +10,7 @@ import net.crashcraft.crashclaim.permissions.PermissionHelper;
 import net.crashcraft.crashclaim.permissions.PermissionRoute;
 import net.crashcraft.crashclaim.permissions.PermissionSetup;
 import net.crashcraft.crashclaim.visualize.VisualizationManager;
+import net.md_5.bungee.api.chat.hover.content.TextSerializer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -47,6 +48,7 @@ import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,12 +57,19 @@ public class PlayerListener implements Listener {
     private final PermissionSetup perms;
     private final VisualizationManager visuals;
     private final ClaimDataManager manager;
+    private final EnumSet<Material> signs;
 
     public PlayerListener(ClaimDataManager manager, VisualizationManager visuals){
         this.manager = manager;
         this.perms = manager.getPermissionSetup();
         this.visuals = visuals;
         this.helper = PermissionHelper.getPermissionHelper();
+        signs = EnumSet.noneOf(Material.class);
+        for(Material m : Material.values()){
+            if(m.name().endsWith("_SIGN")){
+                signs.add(m);
+            }
+        }
     }
 
     @EventHandler
@@ -134,6 +143,10 @@ public class PlayerListener implements Listener {
         Location location = e.getClickedBlock().getLocation();
 
         if (GlobalConfig.disabled_worlds.contains(location.getWorld().getUID())){
+            return;
+        }
+
+        if(signs.contains(e.getClickedBlock().getType())){
             return;
         }
 
@@ -381,6 +394,9 @@ public class PlayerListener implements Listener {
         if (GlobalConfig.disabled_worlds.contains(e.getEntity().getWorld().getUID())){
             return;
         }
+        if(e.getEntity() instanceof Boat || e.getEntity() instanceof Minecart){
+            return;
+        }
 
         // Handle pvp inside claims
         if (e.getEntity() instanceof Player player){
@@ -548,6 +564,10 @@ public class PlayerListener implements Listener {
             return;
         }
 
+        if(e.getVehicle() instanceof Boat || e.getVehicle() instanceof Minecart){
+            return;
+        }
+
         if (e.getAttacker() instanceof Player) {
             Player player = (Player) e.getAttacker();
             if (!helper.hasPermission(player.getUniqueId(), e.getVehicle().getLocation(), PermissionRoute.ENTITIES)){
@@ -569,6 +589,16 @@ public class PlayerListener implements Listener {
     @EventHandler (priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteractEntityEvent(PlayerInteractEntityEvent e){
         Player player = e.getPlayer();
+        if(e.getRightClicked() instanceof Boat || e.getRightClicked() instanceof Minecart){
+            return;
+        }
+
+        if(e.getRightClicked() instanceof AbstractHorse){
+            AbstractHorse horse = (AbstractHorse) e.getRightClicked();
+            if(horse.getOwner() != null && horse.getOwner().getUniqueId().equals(e.getPlayer().getUniqueId())){
+                return;
+            }
+        }
 
         if (GlobalConfig.disabled_worlds.contains(player.getWorld().getUID())){
             return;
