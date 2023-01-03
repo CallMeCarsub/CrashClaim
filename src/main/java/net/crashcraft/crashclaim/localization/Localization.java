@@ -271,7 +271,7 @@ public enum Localization {
     MENU__CLAIM__ENTRY_MESSAGE__MESSAGE("<green>Enter new claim entry message. Type <gold>\"clear\" <green>to clear it or type <gold>\"cancel\" <green>to cancel."),
     MENU__CLAIM__ENTRY_MESSAGE__CONFIRMATION("<green>Change claim entry message to <gold><entry_message>"),
 
-    MENU__CLAIM__EXIT_MESSAGE__MESSAGE("<green>Enter new claim exit message. Type <gold>\"clear\" to clear it or type <gold>\"cancel\" <green>to cancel."),
+    MENU__CLAIM__EXIT_MESSAGE__MESSAGE("<green>Enter new claim exit message. Type <gold>\"clear\" <green>to clear it or type <gold>\"cancel\" <green>to cancel."),
     MENU__CLAIM__EXIT_MESSAGE__CONFIRMATION("<green>Change claim exit message to <gold><exit_message>"),
 
     // Permissions
