@@ -397,7 +397,7 @@ public class SQLiteDataProvider implements DataProvider {
 
     private void addClaimData(int data_id, int minX, int minZ, int maxX, int maxZ, int lowerBoundY, UUID world, String name, String entryMessage, String exitMessage, DataType type) throws SQLException{
         if (data_id == -1) {
-            DB.executeUpdate("INSERT INTO claim_data(minX, minZ, maxX, maxZ, lowerBoundY, world, name, entryMessage, exitMessage, `type`) VALUES (?, ?, ?, ?, (SELECT id FROM claimworlds WHERE uuid = ?), ?, ?, ?, ?)",
+            DB.executeUpdate("INSERT INTO claim_data(minX, minZ, maxX, maxZ, lowerBoundY, world, name, entryMessage, exitMessage, `type`) VALUES (?, ?, ?, ?, ?, (SELECT id FROM claimworlds WHERE uuid = ?), ?, ?, ?, ?)",
                     minX, minZ, maxX, maxZ, lowerBoundY, world.toString(), name, entryMessage, exitMessage, type.getType()
             );
         } else {

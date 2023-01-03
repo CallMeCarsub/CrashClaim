@@ -1,6 +1,7 @@
 package net.crashcraft.crashclaim.commands.claiming.modes;
 
 import dev.whip.crashutils.menusystem.defaultmenus.ConfirmationMenu;
+import me.lucko.helper.utils.Players;
 import net.crashcraft.crashclaim.CrashClaim;
 import net.crashcraft.crashclaim.claimobjects.Claim;
 import net.crashcraft.crashclaim.commands.claiming.ClaimCommand;
@@ -126,6 +127,11 @@ public class NewClaimMode implements ClaimMode {
             ((Claim) response.getClaim()).addContribution(player.getUniqueId(), area); //Contribution tracking
 
             player.spigot().sendMessage(Localization.NEW_CLAIM__SUCCESS.getMessage(player));
+            Players.msg(player, "&r","&r",
+                    "&6/&c&l!&6\\ &6/&c&l!&6\\ &6/&c&l!&6\\ &6/&c&l!&6\\  &4&lWARNING &6/&c&l!&6\\ &6/&c&l!&6\\ &6/&c&l!&6\\ &6/&c&l!&6\\",
+                    "&cEverything below y=30 in your claim will not be protected!",
+                    "&eYou can adjust this with &a/claimsettings&e.",
+                    "&r","&r");
 
             VisualGroup group = visualizationManager.fetchVisualGroup(player, true);
             group.removeAllVisuals();
