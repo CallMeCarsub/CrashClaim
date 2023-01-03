@@ -43,7 +43,7 @@ dependencies {
 
     // Other
     implementation("co.aikar:taskchain-bukkit:3.7.2")
-    implementation("net.wesjd:anvilgui:1.5.3-SNAPSHOT")
+    //implementation("net.wesjd:anvilgui:1.5.3-SNAPSHOT") // removed because anvil guis kind of suck
     implementation("co.aikar:fastutil-base:3.0-SNAPSHOT")
     implementation("co.aikar:fastutil-longbase:3.0-SNAPSHOT")
     implementation("co.aikar:fastutil-longhashmap:3.0-SNAPSHOT")
@@ -61,12 +61,20 @@ dependencies {
     compileOnly( "me.clip:placeholderapi:2.10.10")
     compileOnly( "us.dynmap:dynmap-api:3.2-SNAPSHOT")
     compileOnly("net.luckperms:api:5.4")
+    compileOnly("me.lucko:helper:5.6.13")
 
     // Cache2k
     val cache2kVersion = "2.4.1.Final"
 
     implementation("org.cache2k:cache2k-api:${cache2kVersion}")
     runtimeOnly("org.cache2k:cache2k-core:${cache2kVersion}")
+
+    // lombok
+    compileOnly("org.projectlombok:lombok:1.18.24")
+    annotationProcessor("org.projectlombok:lombok:1.18.24")
+
+    testCompileOnly("org.projectlombok:lombok:1.18.24")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
 }
 
 tasks {

@@ -2,18 +2,20 @@ package net.crashcraft.crashclaim.menus;
 
 import dev.whip.crashutils.menusystem.GUI;
 import dev.whip.crashutils.menusystem.defaultmenus.ConfirmationMenu;
+import me.lucko.helper.utils.Players;
 import net.crashcraft.crashclaim.CrashClaim;
 import net.crashcraft.crashclaim.claimobjects.Claim;
 import net.crashcraft.crashclaim.claimobjects.SubClaim;
 import net.crashcraft.crashclaim.config.GlobalConfig;
 import net.crashcraft.crashclaim.localization.Localization;
+import net.crashcraft.crashclaim.menus.helpers.InputPrompt;
 import net.crashcraft.crashclaim.menus.list.PlayerPermListMenu;
 import net.crashcraft.crashclaim.menus.list.SubClaimListMenu;
 import net.crashcraft.crashclaim.menus.permissions.SimplePermissionMenu;
 import net.crashcraft.crashclaim.permissions.PermissionHelper;
 import net.crashcraft.crashclaim.permissions.PermissionRoute;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -139,16 +141,19 @@ public class ClaimMenu extends GUI {
                 break;
             case 32:
                 if (helper.hasPermission(claim, getPlayer().getUniqueId(), PermissionRoute.MODIFY_CLAIM)) {
-                    new AnvilGUI.Builder()
-                            .plugin(CrashClaim.getPlugin())
-                            .itemLeft(Localization.MENU__CLAIM__RENAME__MESSAGE.getItem(player))
-                            .onComplete(((player, reply) -> {
-                                claim.setName(reply);
+                    forceClose();
+                    InputPrompt.of(getPlayer(), LegacyComponentSerializer.legacyAmpersand().serialize(Localization.MENU__CLAIM__RENAME__MESSAGE.getComponent(player)),
+                            (input) -> {
+                                return true;
+                            }, (result) -> {
+                                if(result == null) {
+                                    Players.msg(player, "&cRename timed out.");
+                                    return;
+                                }
+                                claim.setName(result);
                                 player.spigot().sendMessage(Localization.MENU__CLAIM__RENAME__CONFIRMATION.getMessage(player,
-                                        "name", reply));
-                                return AnvilGUI.Response.close();
-                            }))
-                            .open(getPlayer());
+                                        "name", result));
+                            }).start();
                 } else {
                     player.spigot().sendMessage(Localization.MENU__GENERAL__INSUFFICIENT_PERMISSION.getMessage(player));
                     forceClose();
@@ -156,16 +161,22 @@ public class ClaimMenu extends GUI {
                 break;
             case 33:
                 if (helper.hasPermission(claim, getPlayer().getUniqueId(), PermissionRoute.MODIFY_CLAIM)) {
-                    new AnvilGUI.Builder()
-                            .plugin(CrashClaim.getPlugin())
-                            .itemLeft(Localization.MENU__CLAIM__ENTRY_MESSAGE__MESSAGE.getItem(player))
-                            .onComplete(((player, reply) -> {
-                                claim.setEntryMessage(reply);
+                    forceClose();
+                    InputPrompt.of(getPlayer(), LegacyComponentSerializer.legacyAmpersand().serialize(Localization.MENU__CLAIM__ENTRY_MESSAGE__MESSAGE.getComponent(player)),
+                            (input) -> {
+                                return true;
+                            }, (result) -> {
+                                if(result == null) {
+                                    Players.msg(player, "&cRename timed out.");
+                                    return;
+                                }
+                                if(result.equalsIgnoreCase("remove") || result.equalsIgnoreCase("none") || result.equalsIgnoreCase("clear")){
+                                    result = null;
+                                }
+                                claim.setEntryMessage(result);
                                 player.spigot().sendMessage(Localization.MENU__CLAIM__ENTRY_MESSAGE__CONFIRMATION.getMessage(player,
-                                        "entry_message", reply));
-                                return AnvilGUI.Response.close();
-                            }))
-                            .open(getPlayer());
+                                        "entry_message", result == null?"<nothing>":result));
+                            }).start();
                 } else {
                     player.spigot().sendMessage(Localization.MENU__GENERAL__INSUFFICIENT_PERMISSION.getMessage(player));
                     forceClose();
@@ -173,16 +184,22 @@ public class ClaimMenu extends GUI {
                 break;
             case 34:
                 if (helper.hasPermission(claim, getPlayer().getUniqueId(), PermissionRoute.MODIFY_CLAIM)) {
-                    new AnvilGUI.Builder()
-                            .plugin(CrashClaim.getPlugin())
-                            .itemLeft(Localization.MENU__CLAIM__EXIT_MESSAGE__MESSAGE.getItem(player))
-                            .onComplete(((player, reply) -> {
-                                claim.setExitMessage(reply);
+                    forceClose();
+                    InputPrompt.of(getPlayer(), LegacyComponentSerializer.legacyAmpersand().serialize(Localization.MENU__CLAIM__EXIT_MESSAGE__MESSAGE.getComponent(player)),
+                            (input) -> {
+                                return true;
+                            }, (result) -> {
+                                if(result == null) {
+                                    Players.msg(player, "&cRename timed out.");
+                                    return;
+                                }
+                                if(result.equalsIgnoreCase("remove") || result.equalsIgnoreCase("none") || result.equalsIgnoreCase("clear")){
+                                    result = null;
+                                }
+                                claim.setExitMessage(result);
                                 player.spigot().sendMessage(Localization.MENU__CLAIM__EXIT_MESSAGE__CONFIRMATION.getMessage(player,
-                                        "exit_message", reply));
-                                return AnvilGUI.Response.close();
-                            }))
-                            .open(getPlayer());
+                                        "exit_message", result == null?"<nothing>":result));
+                            }).start();
                 } else {
                     player.spigot().sendMessage(Localization.MENU__GENERAL__INSUFFICIENT_PERMISSION.getMessage(player));
                     forceClose();

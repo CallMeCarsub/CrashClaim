@@ -265,13 +265,13 @@ public enum Localization {
     MENU__SUB_CLAIM__TITLE("Sub-Claim Settings"),
     MENU__SUB_CLAIM_LIST__TITLE("Sub-Claims"),
 
-    MENU__CLAIM__RENAME__MESSAGE(Material.PAPER, 1, "Enter new claim name"),
+    MENU__CLAIM__RENAME__MESSAGE("<green>Enter new claim name, or type <gold>\"cancel\" <green>to cancel."),
     MENU__CLAIM__RENAME__CONFIRMATION("<green>Change claim name to <gold><name>"),
 
-    MENU__CLAIM__ENTRY_MESSAGE__MESSAGE(Material.PAPER, 1, "Enter new claim entry message"),
+    MENU__CLAIM__ENTRY_MESSAGE__MESSAGE("<green>Enter new claim entry message. Type <gold>\"clear\" <green>to clear it or type <gold>\"cancel\" <green>to cancel."),
     MENU__CLAIM__ENTRY_MESSAGE__CONFIRMATION("<green>Change claim entry message to <gold><entry_message>"),
 
-    MENU__CLAIM__EXIT_MESSAGE__MESSAGE(Material.PAPER, 1, "Enter new claim exit message"),
+    MENU__CLAIM__EXIT_MESSAGE__MESSAGE("<green>Enter new claim exit message. Type <gold>\"clear\" to clear it or type <gold>\"cancel\" <green>to cancel."),
     MENU__CLAIM__EXIT_MESSAGE__CONFIRMATION("<green>Change claim exit message to <gold><exit_message>"),
 
     // Permissions
@@ -539,6 +539,7 @@ public enum Localization {
 
                         if (!localization.hasPlaceholders) {
                             localization.message = localization.getMessage(null, new String[0]);
+                            localization.component = localization.getComponent(null, new String[0]);
                         }
                         break;
                     case MESSAGE_LIST:
@@ -624,6 +625,7 @@ public enum Localization {
     }
 
     private BaseComponent[] message;
+    private Component component;
     private List<BaseComponent[]> messageList;
 
     Localization(String... defList){
@@ -647,6 +649,19 @@ public enum Localization {
             return getMessage(player, new String[0]);
         }
         return message;
+    }
+
+    public Component getComponent(OfflinePlayer player) {
+        if (hasPlaceholders){
+            return getComponent(player, new String[0]);
+        }
+        return component;
+    }
+    public Component getComponent(OfflinePlayer player, String... replace) {
+        if (hasPlaceholders){
+            return LocalizationLoader.parser.deserialize(LocalizationLoader.placeholderManager.usePlaceholders(player, def), generateTagResolver(replace));
+        }
+        return LocalizationLoader.parser.deserialize(def, generateTagResolver(replace));
     }
 
     public BaseComponent[] getMessage(OfflinePlayer player, String... replace){
