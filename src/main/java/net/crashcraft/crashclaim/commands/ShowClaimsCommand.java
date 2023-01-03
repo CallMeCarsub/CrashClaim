@@ -28,7 +28,7 @@ public class ShowClaimsCommand extends BaseCommand {
     @Subcommand("claims")
     @CommandPermission("crashclaim.user.show.claims")
     public void showClaims(Player player){
-        visualizationManager.visualizeSuroudningClaims(player, claimDataManager);
+        visualizationManager.visualizeSurroundingClaims(player, claimDataManager);
         player.spigot().sendMessage(Localization.SHOW_CLAIMS__SUCCESS.getMessage(player));
     }
 
@@ -44,7 +44,7 @@ public class ShowClaimsCommand extends BaseCommand {
             }
 
             if (claim.getSubClaims().size() != 0){
-                visualizationManager.visualizeSuroudningSubClaims(claim, player);
+                visualizationManager.visualizeSurroundingSubClaims(claim, player);
             } else {
                 player.spigot().sendMessage(Localization.SHOW__SUBCLAIM__NO_SUBCLAIMS.getMessage(player));
             }

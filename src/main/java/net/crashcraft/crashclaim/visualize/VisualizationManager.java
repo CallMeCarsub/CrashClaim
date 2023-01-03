@@ -31,15 +31,17 @@ public class VisualizationManager {
     private final HashMap<UUID, VisualGroup> visualHashMap;
     private final HashMap<BaseVisual, Long> timeMap;
     private final VisualProvider provider;
+    private final BlockVisualProvider blockVisualProvider;
 
     public VisualizationManager(CrashClaim crashClaim){
         this.visualHashMap = new HashMap<>();
         this.timeMap = new HashMap<>();
 
+        blockVisualProvider = new BlockVisualProvider();
         if (GlobalConfig.visual_type.equals("glow")){
             provider = new GlowVisualProvider();
         } else {
-            provider = new BlockVisualProvider();
+            provider = blockVisualProvider;
         }
 
         ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
@@ -69,6 +71,14 @@ public class VisualizationManager {
         }, 0, 20L);
 
         crashClaim.saveConfig();
+    }
+
+    public VisualProvider getProvider(UUID target){
+        if (target.getMostSignificantBits() == 0){
+            return blockVisualProvider;
+        } else {
+            return provider;
+        }
     }
 
     public void sendAlert(Player player, BaseComponent[] message){
@@ -103,7 +113,7 @@ public class VisualizationManager {
         timeMap.put(visual, System.currentTimeMillis() + (seconds * 1000L));
     }
 
-    public void visualizeSuroudningClaims(Player player, ClaimDataManager claimDataManager){
+    public void visualizeSurroundingClaims(Player player, ClaimDataManager claimDataManager){
         long chunkx = player.getLocation().getChunk().getX();
         long chunkz = player.getLocation().getChunk().getZ();
 
@@ -138,22 +148,22 @@ public class VisualizationManager {
         int y = player.getLocation().getBlockY() - 1;
 
         for (Claim claim : claims){
-            BaseVisual visual = provider.spawnClaimVisual(null, group, claim, y);
+            BaseVisual visual = getProvider(player.getUniqueId()).spawnClaimVisual(null, group, claim, y);
             visual.spawn();
         }
     }
 
-    public void visualizeSuroudningSubClaims(Claim claim, Player player){
+    public void visualizeSurroundingSubClaims(Claim claim, Player player){
         ArrayList<SubClaim> subClaims = claim.getSubClaims();
         VisualGroup group = fetchVisualGroup(player, true);
         group.removeAllVisuals();
 
         int y = player.getLocation().getBlockY();
 
-        provider.spawnClaimVisual(VisualColor.WHITE, group, claim, y - 1).spawn();
+        getProvider(player.getUniqueId()).spawnClaimVisual(VisualColor.WHITE, group, claim, y - 1).spawn();
 
         for (SubClaim subClaim : subClaims){
-            provider.spawnClaimVisual(null, group, subClaim, y).spawn();
+            getProvider(player.getUniqueId()).spawnClaimVisual(null, group, subClaim, y).spawn();
         }
     }
 

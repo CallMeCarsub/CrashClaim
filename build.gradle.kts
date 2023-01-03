@@ -38,7 +38,7 @@ dependencies {
 
     // Adventure
     implementation("net.kyori:adventure-api:4.11.0")
-    implementation("net.kyori:adventure-platform-bukkit:4.1.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.1.2")
     implementation("net.kyori:adventure-text-minimessage:4.11.0")
 
     // Other
@@ -80,6 +80,7 @@ tasks {
         relocate("io.papermc.lib", "net.crashcraft.crashclaim.paperlib")
         relocate("org.bstats", "net.crashcraft.crashclaim.bstats")
         relocate("it.unimi.dsi", "net.crashcraft.crashclaim.fastutil")
+        relocate("org.cache2k.IntCache", "net.crashcraft.crashclaim.cache2k")
         relocate("com.zaxxer.hikari", "net.crashcraft.crashclaim.hikari")
     }
 
