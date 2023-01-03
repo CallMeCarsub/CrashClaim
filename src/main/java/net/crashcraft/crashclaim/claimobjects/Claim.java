@@ -20,12 +20,25 @@ public class Claim extends BaseClaim {
 
     private HashMap<UUID, Integer> contribution;
 
-    public Claim(int id, int upperCornerX, int upperCornerZ, int lowerCornerX, int lowerCornerZ, UUID world, PermissionGroup perms, UUID owner) {
+    private int lowerBoundY;
+    public static final boolean LOWER_BOUND_ACTIVE = false;
+
+    public Claim(int id, int upperCornerX, int upperCornerZ, int lowerCornerX, int lowerCornerZ, int lowerBoundY, UUID world, PermissionGroup perms, UUID owner) {
         super(id, upperCornerX, upperCornerZ, lowerCornerX, lowerCornerZ, world, perms);
         this.toSave = false;
+        this.lowerBoundY = lowerBoundY;
         this.subClaims = new ArrayList<>();
         this.owner = owner;
         this.contribution = new HashMap<>();
+    }
+
+    public void setLowerBoundY(int lowerBoundY){
+        this.lowerBoundY = lowerBoundY;
+        this.setToSave(true);
+    }
+
+    public int getLowerBoundY() {
+        return lowerBoundY;
     }
 
     public boolean hasGlobalPermission(PermissionRoute route){
@@ -59,59 +72,65 @@ public class Claim extends BaseClaim {
     }
 
     private int getActivePermission(Location location, PermissionRoute route){
-        if (location != null && subClaims.size() > 0){
-            SubClaim subClaim = getSubClaim(location.getBlockX(), location.getBlockZ());
-            if (subClaim != null){
-                return PermissionRouter.getLayeredPermission(this, subClaim, route);
+        if(location != null) {
+            if(LOWER_BOUND_ACTIVE && location.getY() < lowerBoundY) return PermState.ENABLED;
+            if ( subClaims.size() > 0) {
+                SubClaim subClaim = getSubClaim(location.getBlockX(), location.getBlockZ());
+                if (subClaim != null) {
+                    return PermissionRouter.getLayeredPermission(this, subClaim, route);
+                }
+                return route.getPerm(getPerms().getGlobalPermissionSet());
             }
-            return route.getPerm(getPerms().getGlobalPermissionSet());
-        } else {
-            return PermissionRouter.getLayeredPermission(this, null, route);
         }
+        return PermissionRouter.getLayeredPermission(this, null, route);
     }
 
     private int getActivePermission(Location location, Material material){
-        if (location != null && subClaims.size() > 0){
-            SubClaim subClaim = getSubClaim(location.getBlockX(), location.getBlockZ());
-            if (subClaim != null){
-                return PermissionRouter.getLayeredPermission(this, subClaim, material);
+        if(location != null) {
+            if(LOWER_BOUND_ACTIVE && location.getY() < lowerBoundY) return PermState.ENABLED;
+            if (subClaims.size() > 0) {
+                SubClaim subClaim = getSubClaim(location.getBlockX(), location.getBlockZ());
+                if (subClaim != null) {
+                    return PermissionRouter.getLayeredPermission(this, subClaim, material);
+                }
+                return PermissionRoute.CONTAINERS.getPerm(getPerms().getGlobalPermissionSet());
             }
-            return PermissionRoute.CONTAINERS.getPerm(getPerms().getGlobalPermissionSet());
-        } else {
-            return PermissionRouter.getLayeredPermission(this, null, material);
         }
+        return PermissionRouter.getLayeredPermission(this, null, material);
     }
 
     private int getActivePermission(UUID uuid, Location location, PermissionRoute route){   //should only be executed with a location inside the claim
         if (uuid.equals(owner))
             return PermState.ENABLED;
-
-        if (location != null && subClaims.size() > 0){
-            SubClaim subClaim = getSubClaim(location.getBlockX(), location.getBlockZ());
-            if (subClaim != null){
-                return PermissionRouter.getLayeredPermission(this, subClaim, uuid, route);
-            } else {
-                return PermissionRouter.getLayeredPermission(this, null, uuid, route);
+        if(location != null) {
+            if(LOWER_BOUND_ACTIVE && location.getY() < lowerBoundY) return PermState.ENABLED;
+            if (subClaims.size() > 0) {
+                SubClaim subClaim = getSubClaim(location.getBlockX(), location.getBlockZ());
+                if (subClaim != null) {
+                    return PermissionRouter.getLayeredPermission(this, subClaim, uuid, route);
+                } else {
+                    return PermissionRouter.getLayeredPermission(this, null, uuid, route);
+                }
             }
-        } else {
-            return PermissionRouter.getLayeredPermission(this, null, uuid, route);
         }
+        return PermissionRouter.getLayeredPermission(this, null, uuid, route);
     }
 
     private int getActivePermission(UUID uuid, Location location, Material material){   //should only be executed with a location inside the claim
         if (uuid.equals(owner))
             return PermState.ENABLED;
-
-        if (location != null && subClaims.size() > 0){
-            SubClaim subClaim = getSubClaim(location.getBlockX(), location.getBlockZ());
-            if (subClaim != null){
-                return PermissionRouter.getLayeredContainer(this, subClaim, uuid, material);
-            } else {
-                return PermissionRouter.getLayeredContainer(this, null, uuid, material);
+        if(location != null) {
+            if(LOWER_BOUND_ACTIVE && location.getY() < lowerBoundY) return PermState.ENABLED;
+            if (subClaims.size() > 0) {
+                SubClaim subClaim = getSubClaim(location.getBlockX(), location.getBlockZ());
+                if (subClaim != null) {
+                    return PermissionRouter.getLayeredContainer(this, subClaim, uuid, material);
+                } else {
+                    return PermissionRouter.getLayeredContainer(this, null, uuid, material);
+                }
             }
-        } else {
-            return PermissionRouter.getLayeredContainer(this, null, uuid, material);
         }
+        return PermissionRouter.getLayeredContainer(this, null, uuid, material);
     }
 
     public void addContribution(UUID player, int area){

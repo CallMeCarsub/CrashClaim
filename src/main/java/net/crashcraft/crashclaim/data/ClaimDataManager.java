@@ -133,6 +133,7 @@ public class ClaimDataManager implements Listener {
                 maxCorner.getBlockZ(),
                 minCorner.getBlockX(),
                 minCorner.getBlockZ(),
+                30,
                 maxCorner.getWorld().getUID(),
                 new ParentPermissionGroup(null, null, null),
                 owner);

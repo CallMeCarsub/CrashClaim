@@ -2,6 +2,7 @@ package net.crashcraft.crashclaim.menus;
 
 import dev.whip.crashutils.menusystem.GUI;
 import dev.whip.crashutils.menusystem.defaultmenus.ConfirmationMenu;
+import me.lucko.helper.Schedulers;
 import me.lucko.helper.utils.Players;
 import net.crashcraft.crashclaim.CrashClaim;
 import net.crashcraft.crashclaim.claimobjects.Claim;
@@ -18,6 +19,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -47,7 +49,6 @@ public class ClaimMenu extends GUI {
         hasSubClaims = false;
 
         ItemStack descItem;
-
         if (claim.getOwner().equals(getPlayer().getUniqueId())){
             descItem = Localization.MENU__GENERAL__CLAIM_ITEM_NO_OWNER.getItem(player,
                     "name", claim.getName(),
@@ -55,6 +56,7 @@ public class ClaimMenu extends GUI {
                     "min_z", Integer.toString(claim.getMinZ()),
                     "max_x", Integer.toString(claim.getMaxX()),
                     "max_z", Integer.toString(claim.getMaxZ()),
+                    "lower_bound_y", Integer.toString(claim.getLowerBoundY()),
                     "world", Bukkit.getWorld(claim.getWorld()).getName()
             );
         } else {
@@ -64,6 +66,7 @@ public class ClaimMenu extends GUI {
                     "min_z", Integer.toString(claim.getMinZ()),
                     "max_x", Integer.toString(claim.getMaxX()),
                     "max_z", Integer.toString(claim.getMaxZ()),
+                    "lower_bound_y", Integer.toString(claim.getLowerBoundY()),
                     "world", Bukkit.getWorld(claim.getWorld()).getName(),
                     "owner", Bukkit.getOfflinePlayer(claim.getOwner()).getName()
             );
@@ -84,11 +87,13 @@ public class ClaimMenu extends GUI {
             inv.setItem(32, Localization.MENU__PERMISSIONS__BUTTONS__RENAME.getItem(player));
             inv.setItem(33, Localization.MENU__PERMISSIONS__BUTTONS__EDIT_ENTRY.getItem(player));
             inv.setItem(34, Localization.MENU__PERMISSIONS__BUTTONS__EDIT_EXIT.getItem(player));
+            inv.setItem(42, Localization.MENU__PERMISSIONS__BUTTONS__SET_LOWER_BOUND_Y.getItem(player));
             inv.setItem(49, Localization.MENU__PERMISSIONS__BUTTONS__DELETE.getItem(player));
         } else {
             inv.setItem(32, Localization.MENU__PERMISSIONS__BUTTONS__RENAME_DISABLED.getItem(player));
             inv.setItem(33, Localization.MENU__PERMISSIONS__BUTTONS__EDIT_ENTRY_DISABLED.getItem(player));
             inv.setItem(34, Localization.MENU__PERMISSIONS__BUTTONS__EDIT_EXIT_DISABLED.getItem(player));
+            inv.setItem(42, Localization.MENU__PERMISSIONS__BUTTONS__SET_LOWER_BOUND_Y_DISABLED.getItem(player));
             inv.setItem(49, Localization.MENU__PERMISSIONS__BUTTONS__DELETE_DISABLED.getItem(player));
         }
 
@@ -199,6 +204,41 @@ public class ClaimMenu extends GUI {
                                 claim.setExitMessage(result);
                                 player.spigot().sendMessage(Localization.MENU__CLAIM__EXIT_MESSAGE__CONFIRMATION.getMessage(player,
                                         "exit_message", result == null?"<nothing>":result));
+                            }).start();
+                } else {
+                    player.spigot().sendMessage(Localization.MENU__GENERAL__INSUFFICIENT_PERMISSION.getMessage(player));
+                    forceClose();
+                }
+                break;
+            case 42: // lower bound y
+                if (helper.hasPermission(claim, getPlayer().getUniqueId(), PermissionRoute.MODIFY_CLAIM)) {
+                    forceClose();
+                    World world = Bukkit.getWorld(claim.getWorld());
+                    if(world == null){
+                        Players.msg(player, "&cFailed to load world for claim - cancelled.");
+                        return;
+                    }
+                    InputPrompt.of(getPlayer(), LegacyComponentSerializer.legacyAmpersand().serialize(Localization.MENU__CLAIM__LOWER_BOUND_Y__MESSAGE.getComponent(player,
+                                    "min_height", Integer.toString(world.getMinHeight()),
+                                    "max_height", Integer.toString(world.getMaxHeight()))),
+                            (input) -> {
+                                try{
+                                    int newBound = Integer.parseInt(input);
+                                    if(newBound > world.getMaxHeight() || newBound < world.getMinHeight()){
+                                        return false;
+                                    }
+                                }catch (Exception e){
+                                    return false;
+                                }
+                                return true;
+                            }, (result) -> {
+                                if(result == null) {
+                                    Players.msg(player, "&cLower Bound Y adjustment timed out.");
+                                    return;
+                                }
+                                claim.setLowerBoundY(Integer.parseInt(result));
+                                player.spigot().sendMessage(Localization.MENU__CLAIM__LOWER_BOUND_Y__CONFIRMATION.getMessage(player,
+                                        "lower_bound_y", result));
                             }).start();
                 } else {
                     player.spigot().sendMessage(Localization.MENU__GENERAL__INSUFFICIENT_PERMISSION.getMessage(player));

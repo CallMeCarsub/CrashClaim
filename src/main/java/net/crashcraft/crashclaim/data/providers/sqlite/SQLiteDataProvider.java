@@ -218,6 +218,7 @@ public class SQLiteDataProvider implements DataProvider {
                     claim.getMinZ(),
                     claim.getMaxX(),
                     claim.getMaxZ(),
+                    claim.getLowerBoundY(),
                     claim.getWorld(),
                     claim.getName(),
                     claim.getEntryMessage(),
@@ -227,10 +228,10 @@ public class SQLiteDataProvider implements DataProvider {
 
             //Claim
             DB.executeUpdate("INSERT OR IGNORE INTO claims(id, data, players_id) VALUES (?, " +
-                            "(SELECT id FROM claim_data WHERE minX = ? AND minZ = ? AND maxX = ? AND maxZ = ? AND world = (SELECT id FROM claimworlds WHERE uuid = ?))," +
+                            "(SELECT id FROM claim_data WHERE minX = ? AND minZ = ? AND maxX = ? AND maxZ = ? AND lowerBoundY = ? AND world = (SELECT id FROM claimworlds WHERE uuid = ?))," +
                             "(SELECT id FROM players WHERE uuid = ?))",
                     claim.getId(),
-                    claim.getMinX(), claim.getMinZ(), claim.getMaxX(), claim.getMaxZ(), claim.getWorld().toString(),
+                    claim.getMinX(), claim.getMinZ(), claim.getMaxX(), claim.getMaxZ(), claim.getLowerBoundY(), claim.getWorld().toString(),
                     claim.getOwner()
             );
 
@@ -254,6 +255,7 @@ public class SQLiteDataProvider implements DataProvider {
                         subClaim.getMinZ(),
                         subClaim.getMaxX(),
                         subClaim.getMaxZ(),
+                        0, // ignored, effectively.
                         subClaim.getWorld(),
                         subClaim.getName(),
                         subClaim.getEntryMessage(),
@@ -393,16 +395,16 @@ public class SQLiteDataProvider implements DataProvider {
         );
     }
 
-    private void addClaimData(int data_id, int minX, int minZ, int maxX, int maxZ, UUID world, String name, String entryMessage, String exitMessage, DataType type) throws SQLException{
+    private void addClaimData(int data_id, int minX, int minZ, int maxX, int maxZ, int lowerBoundY, UUID world, String name, String entryMessage, String exitMessage, DataType type) throws SQLException{
         if (data_id == -1) {
-            DB.executeUpdate("INSERT INTO claim_data(minX, minZ, maxX, maxZ, world, name, entryMessage, exitMessage, `type`) VALUES (?, ?, ?, ?, (SELECT id FROM claimworlds WHERE uuid = ?), ?, ?, ?, ?)",
-                    minX, minZ, maxX, maxZ, world.toString(), name, entryMessage, exitMessage, type.getType()
+            DB.executeUpdate("INSERT INTO claim_data(minX, minZ, maxX, maxZ, lowerBoundY, world, name, entryMessage, exitMessage, `type`) VALUES (?, ?, ?, ?, (SELECT id FROM claimworlds WHERE uuid = ?), ?, ?, ?, ?)",
+                    minX, minZ, maxX, maxZ, lowerBoundY, world.toString(), name, entryMessage, exitMessage, type.getType()
             );
         } else {
-            DB.executeUpdate("INSERT INTO claim_data(id, minX, minZ, maxX, maxZ, world, name, entryMessage, exitMessage, `type`) VALUES (?, ?, ?, ?, ?, (SELECT id FROM claimworlds WHERE uuid = ?), ?, ?, ?, ?)" +
-                            "ON CONFLICT(id) DO UPDATE SET minX = ?, minZ = ?, maxX = ?, maxZ = ?, world = (SELECT id FROM claimworlds WHERE uuid = ?), name = ?, entryMessage = ?, exitMessage = ?",
-                    data_id, minX, minZ, maxX, maxZ, world.toString(), name, entryMessage, exitMessage, type.getType(),
-                    minX, minZ, maxX, maxZ, world.toString(), name, entryMessage, exitMessage
+            DB.executeUpdate("INSERT INTO claim_data(id, minX, minZ, maxX, maxZ, lowerBoundY, world, name, entryMessage, exitMessage, `type`) VALUES (?, ?, ?, ?, ?, ?, (SELECT id FROM claimworlds WHERE uuid = ?), ?, ?, ?, ?)" +
+                            "ON CONFLICT(id) DO UPDATE SET minX = ?, minZ = ?, maxX = ?, maxZ = ?, lowerBoundY = ?, world = (SELECT id FROM claimworlds WHERE uuid = ?), name = ?, entryMessage = ?, exitMessage = ?",
+                    data_id, minX, minZ, maxX, maxZ, lowerBoundY, world.toString(), name, entryMessage, exitMessage, type.getType(),
+                    minX, minZ, maxX, maxZ, lowerBoundY, world.toString(), name, entryMessage, exitMessage
             );
         }
     }
@@ -427,6 +429,7 @@ public class SQLiteDataProvider implements DataProvider {
                             "    claim_data.maxX," +
                             "    claim_data.id," +
                             "    claim_data.maxZ," +
+                            "    claim_data.lowerBoundY," +
                             "    claim_data.name," +
                             "    claim_data.entryMessage," +
                             "    claim_data.exitMessage," +
@@ -461,6 +464,7 @@ public class SQLiteDataProvider implements DataProvider {
                     claimDataRow.getInt("maxZ"),
                     claimDataRow.getInt("minX"),
                     claimDataRow.getInt("minZ"),
+                    claimDataRow.getInt("lowerBoundY"),
                     world,
                     group,
                     owner

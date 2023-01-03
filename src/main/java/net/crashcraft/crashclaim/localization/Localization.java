@@ -239,17 +239,20 @@ public enum Localization {
     MENU__GENERAL__CLAIM_ITEM_NO_OWNER(null, 1,
             "<name>",
             "<green>Coordinates: <yellow><min_x>, <min_z><gold> | <yellow><max_x>, <max_z>",
+            "<green>Lower Bound Y: <yellow><lower_bound_y>",
             "<green>World: <yellow><world>"),
 
     MENU__GENERAL__CLAIM_ITEM(null, 1,
             "<name>",
             "<green>Coordinates: <yellow><min_x>, <min_z><gold> | <yellow><max_x>, <max_z>",
+            "<green>Lower Bound Y: <yellow><lower_bound_y>",
             "<green>World: <yellow><world>",
             "<green>Owner: <yellow><owner>"),
 
     MENU__GENERAL__CLAIM_ITEM_PLAYER(null, 1,
             "<gold><name>",
             "<green>Claim Coordinates: <yellow><min_x>, <min_z><gold> | <yellow><max_x>, <max_z>",
+            "<green>Claim Lower Bound Y: <yellow><lower_bound_y>",
             "<green>Claim World: <yellow><world>"),
 
     MENU__GENERAL__PAGE_DISPLAY(Material.ARROW, 1, "<gold>Page <page> / <page_total>"),
@@ -266,13 +269,16 @@ public enum Localization {
     MENU__SUB_CLAIM_LIST__TITLE("Sub-Claims"),
 
     MENU__CLAIM__RENAME__MESSAGE("<green>Enter new claim name, or type <gold>\"cancel\" <green>to cancel."),
-    MENU__CLAIM__RENAME__CONFIRMATION("<green>Change claim name to <gold><name>"),
+    MENU__CLAIM__RENAME__CONFIRMATION("<green>Changed claim name to <gold><name>"),
 
     MENU__CLAIM__ENTRY_MESSAGE__MESSAGE("<green>Enter new claim entry message. Type <gold>\"clear\" <green>to clear it or type <gold>\"cancel\" <green>to cancel."),
-    MENU__CLAIM__ENTRY_MESSAGE__CONFIRMATION("<green>Change claim entry message to <gold><entry_message>"),
+    MENU__CLAIM__ENTRY_MESSAGE__CONFIRMATION("<green>Changed claim entry message to <gold><entry_message>"),
 
     MENU__CLAIM__EXIT_MESSAGE__MESSAGE("<green>Enter new claim exit message. Type <gold>\"clear\" <green>to clear it or type <gold>\"cancel\" <green>to cancel."),
-    MENU__CLAIM__EXIT_MESSAGE__CONFIRMATION("<green>Change claim exit message to <gold><exit_message>"),
+    MENU__CLAIM__EXIT_MESSAGE__CONFIRMATION("<green>Changed claim exit message to <gold><exit_message>"),
+
+    MENU__CLAIM__LOWER_BOUND_Y__MESSAGE("<green>Enter new lower bound Y. Must be between <gold><min_height> <green>and <gold><max_height><green>. Type <gold>\"cancel\" <green>to cancel."),
+    MENU__CLAIM__LOWER_BOUND_Y__CONFIRMATION("<green>Changed claim lower bound Y to <gold><lower_bound_y>"),
 
     // Permissions
     MENU__PERMISSIONS__BUTTONS__PER_PLAYER(Material.PLAYER_HEAD, 1,
@@ -309,6 +315,16 @@ public enum Localization {
     MENU__PERMISSIONS__BUTTONS__EDIT_EXIT_DISABLED(Material.ANVIL, 1,
             "<gray>Edit Exit Message",
             "<dark_gray>Edit the exit message of your claim"),
+
+    MENU__PERMISSIONS__BUTTONS__SET_LOWER_BOUND_Y(Material.BEDROCK, 1,
+            "<gold>Set Lower Bound Y",
+            "<green>Set the minimum Y coordinate protected",
+            "<green>within your claim."),
+
+    MENU__PERMISSIONS__BUTTONS__SET_LOWER_BOUND_Y_DISABLED(Material.BEDROCK, 1,
+            "<gray>Set Lower Bound Y",
+            "<green>Set the minimum Y coordinate protected",
+            "<green>within your claim."),
 
     MENU__PERMISSIONS__BUTTONS__DELETE(Material.RED_CONCRETE, 1,
             "<gold>Delete Claim",
