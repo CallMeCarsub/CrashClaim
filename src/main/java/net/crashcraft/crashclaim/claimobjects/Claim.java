@@ -21,7 +21,7 @@ public class Claim extends BaseClaim {
     private HashMap<UUID, Integer> contribution;
 
     private int lowerBoundY;
-    public static final boolean LOWER_BOUND_ACTIVE = false;
+    public static final boolean LOWER_BOUND_ACTIVE = true;
 
     public Claim(int id, int upperCornerX, int upperCornerZ, int lowerCornerX, int lowerCornerZ, int lowerBoundY, UUID world, PermissionGroup perms, UUID owner) {
         super(id, upperCornerX, upperCornerZ, lowerCornerX, lowerCornerZ, world, perms);
