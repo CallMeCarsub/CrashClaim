@@ -103,6 +103,8 @@ public class PlayerListener implements Listener {
             return;
         }
 
+        if(e.getEntity() instanceof EnderPearl) return;
+
         if (e.getEntity().getShooter() instanceof Player player && !helper.hasPermission(player.getUniqueId(), player.getLocation(), PermissionRoute.ENTITIES)){
             e.setCancelled(true);
             visuals.sendAlert(player, Localization.ALERT__NO_PERMISSIONS__ENTITIES.getMessage(player));

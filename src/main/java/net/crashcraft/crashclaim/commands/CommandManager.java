@@ -43,6 +43,7 @@ public class CommandManager {
         commandManager.registerCommand(new BypassCommand(bypassManager));
         commandManager.registerCommand(new ClaimInfoCommand(manager));
         commandManager.registerCommand(new EjectCommand(manager));
+        commandManager.registerCommand(new StuckCommand(manager));
         commandManager.registerCommand(new AdminCommand(plugin, plugin.getMigrationManager()));
     }
 

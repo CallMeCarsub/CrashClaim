@@ -109,7 +109,7 @@ public class GlobalConfig extends BaseConfig{
             }
 
             String value = getString("events.teleport." + cause.name(), "block");
-
+            System.out.println(cause.name() + " -> \"" + value + "\"");
             switch (value.toLowerCase()){
                 case "none":
                     teleportCause.put(cause, 0);
