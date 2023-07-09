@@ -281,13 +281,13 @@ public class PlayerListener implements Listener {
             case 0: //Disable
                 return;
             case 1: //Block
-                if (!helper.hasPermission(event.getPlayer().getUniqueId(), location, PermissionRoute.TELEPORTATION)){
+                if (!event.getPlayer().hasPermission("cmc.claimbypass") && !helper.hasPermission(event.getPlayer().getUniqueId(), location, PermissionRoute.TELEPORTATION)){
                     visuals.sendAlert(event.getPlayer(), Localization.ALERT__NO_PERMISSIONS__TELEPORT.getMessage(event.getPlayer()));
                     event.setCancelled(true);
                 }
                 return;
             case 2: //Relocate
-                if (!helper.hasPermission(event.getPlayer().getUniqueId(), location, PermissionRoute.TELEPORTATION)){
+                if (!event.getPlayer().hasPermission("cmc.claimbypass") && !helper.hasPermission(event.getPlayer().getUniqueId(), location, PermissionRoute.TELEPORTATION)){
                     visuals.sendAlert(event.getPlayer(), Localization.ALERT__NO_PERMISSIONS__TELEPORT_RELOCATE.getMessage(event.getPlayer()));
 
                     Claim claim = manager.getClaim(location.getBlockX(), location.getBlockZ(), location.getWorld().getUID());
