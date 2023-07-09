@@ -111,7 +111,9 @@ public class AdvancedPermissionMenu extends MenuListHelper {
                 LinkedHashMap<PermissionRoute, MenuSwitchType> menuItemlist = new LinkedHashMap<>();
 
                 if (claim instanceof SubClaim){ // Sub Claims do not need the other options.
-                    menuItemlist.put(PermissionRoute.ENTITY_GRIEF, MenuSwitchType.DOUBLE);
+                    menuItemlist.put(PermissionRoute.PISTONS, MenuSwitchType.TRIPLE);
+                    menuItemlist.put(PermissionRoute.FLUIDS, MenuSwitchType.TRIPLE);
+                    menuItemlist.put(PermissionRoute.ENTITY_GRIEF, MenuSwitchType.TRIPLE);
                 } else {
                     menuItemlist.put(PermissionRoute.PISTONS, MenuSwitchType.DOUBLE);
                     menuItemlist.put(PermissionRoute.FLUIDS, MenuSwitchType.DOUBLE);
@@ -136,10 +138,10 @@ public class AdvancedPermissionMenu extends MenuListHelper {
                 if (isPlayerPermission) {
                     inv.setItem(42, Localization.MENU__PERMISSION_OPTION__ADMIN.getItem(player));
                 } else {
-                    if (claim instanceof SubClaim){
-                        inv.setItem(42, Localization.MENU__PERMISSION_OPTION__UNUSED.getItem(player));
-                        break;
-                    }
+//                    if (claim instanceof SubClaim){
+//                        inv.setItem(42, Localization.MENU__PERMISSION_OPTION__UNUSED.getItem(player));
+//                        break;
+//                    }
 
                     inv.setItem(42, Localization.MENU__PERMISSION_OPTION__MISC.getItem(player));
                 }
@@ -151,10 +153,10 @@ public class AdvancedPermissionMenu extends MenuListHelper {
                 if (isPlayerPermission) {
                     inv.setItem(42, Localization.MENU__PERMISSION_OPTION__ADMIN.getItem(player));
                 } else {
-                    if (claim instanceof SubClaim){
-                        inv.setItem(42, Localization.MENU__PERMISSION_OPTION__UNUSED.getItem(player));
-                        break;
-                    }
+//                    if (claim instanceof SubClaim){
+//                        inv.setItem(42, Localization.MENU__PERMISSION_OPTION__UNUSED.getItem(player));
+//                        break;
+//                    }
 
                     inv.setItem(42, Localization.MENU__PERMISSION_OPTION__MISC.getItem(player));
                 }
