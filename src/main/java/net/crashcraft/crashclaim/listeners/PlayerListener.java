@@ -37,15 +37,7 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
-import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupArrowEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 
 import java.util.EnumSet;
@@ -649,6 +641,20 @@ public class PlayerListener implements Listener {
         }
 
         if (!helper.hasPermission(player.getUniqueId(), e.getBlock().getLocation(), PermissionRoute.BUILD)){
+            e.setCancelled(true);
+            visuals.sendAlert(player, Localization.ALERT__NO_PERMISSIONS__BUILD.getMessage(player));
+        }
+    }
+
+    @EventHandler (priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onLecternTake(PlayerTakeLecternBookEvent e){
+        Player player = e.getPlayer();
+
+        if (GlobalConfig.disabled_worlds.contains(player.getWorld().getUID())){
+            return;
+        }
+
+        if (!helper.hasPermission(player.getUniqueId(), e.getLectern().getLocation(), PermissionRoute.BUILD)){
             e.setCancelled(true);
             visuals.sendAlert(player, Localization.ALERT__NO_PERMISSIONS__BUILD.getMessage(player));
         }
