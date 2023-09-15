@@ -16,6 +16,7 @@ import net.crashcraft.crashclaim.config.ConfigManager;
 import net.crashcraft.crashclaim.config.GlobalConfig;
 import net.crashcraft.crashclaim.data.ClaimDataManager;
 import net.crashcraft.crashclaim.data.MaterialName;
+import net.crashcraft.crashclaim.listeners.BugfixListener;
 import net.crashcraft.crashclaim.listeners.PaperListener;
 import net.crashcraft.crashclaim.listeners.PlayerListener;
 import net.crashcraft.crashclaim.listeners.WorldListener;
@@ -109,6 +110,7 @@ public class CrashClaim extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new WorldListener(manager, visualizationManager), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(manager, visualizationManager), this);
+        Bukkit.getPluginManager().registerEvents(new BugfixListener(), this);
 
         if (PaperLib.isPaper()){
             getLogger().info("Using extra protections provided by the paper api");

@@ -211,33 +211,49 @@ public class PlayerListener implements Listener {
     private boolean checkToCancelFluid(Block block, Block pushingBlock){
         Claim pistonClaim = manager.getClaim(block.getLocation());
         Claim pushedClaim = manager.getClaim(pushingBlock.getLocation());
-
-        if (pistonClaim == pushedClaim)
-            return false;
+        // if same claim, then check if subclaims either both dont exist or are the same
+        if (pistonClaim == pushedClaim) {
+            if(pistonClaim == null && pushedClaim == null){
+                return false;
+            }
+            SubClaim pistonSubClaim = pistonClaim.getSubClaim(block.getX(), block.getZ());
+            SubClaim pushedSubClaim = pushedClaim.getSubClaim(pushingBlock.getX(), pushingBlock.getZ());
+            if(pistonSubClaim == pushedSubClaim) {
+                return false;
+            }
+        }
 
         //Check both claims if one has it disabled then the event is canceled
-        if (pistonClaim != null && !pistonClaim.hasGlobalPermission(PermissionRoute.FLUIDS)) {
+        if (pistonClaim != null && !pistonClaim.hasPermission(block.getLocation(),PermissionRoute.FLUIDS)) {
             return true;
         }
 
         // Could combine but this is easier to read
-        return pushedClaim != null && !pushedClaim.hasGlobalPermission(PermissionRoute.FLUIDS);
+        return pushedClaim != null && !pushedClaim.hasPermission(pushingBlock.getLocation(),PermissionRoute.FLUIDS);
     }
 
     private boolean checkToCancel(Block block, Block pushingBlock){
         Claim pistonClaim = manager.getClaim(block.getLocation());
         Claim pushedClaim = manager.getClaim(pushingBlock.getLocation());
 
-        if (pistonClaim == pushedClaim)
-            return false;
+        if (pistonClaim == pushedClaim) {
+            if(pistonClaim == null && pushedClaim == null){
+                return false;
+            }
+            SubClaim pistonSubClaim = pistonClaim.getSubClaim(block.getX(), block.getZ());
+            SubClaim pushedSubClaim = pushedClaim.getSubClaim(pushingBlock.getX(), pushingBlock.getZ());
+            if(pistonSubClaim == null && pushedSubClaim == null) {
+                return false;
+            }
+        }
 
         //Check both claims if one has it disabled then the event is canceled
-        if (pistonClaim != null && !pistonClaim.hasGlobalPermission(PermissionRoute.PISTONS)) {
+        if (pistonClaim != null && !pistonClaim.hasPermission(block.getLocation(),PermissionRoute.PISTONS)) {
             return true;
         }
 
         // Could combine but this is easier to read
-        return pushedClaim != null && !pushedClaim.hasGlobalPermission(PermissionRoute.PISTONS);
+        return pushedClaim != null && !pushedClaim.hasPermission(pushingBlock.getLocation(),PermissionRoute.PISTONS);
     }
 
     private boolean processPistonEvent(BlockFace direction, List<Block> blocks, Block pistonBlock){
