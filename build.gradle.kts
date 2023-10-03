@@ -34,7 +34,7 @@ dependencies {
     compileOnly("com.github.Chasewhip8:CrashPayment:master-SNAPSHOT")
 
     // Paper
-    compileOnly("io.papermc.paper:paper-api:1.18-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
 
     // Adventure
     implementation("net.kyori:adventure-api:4.13.0")
@@ -49,7 +49,7 @@ dependencies {
     implementation("co.aikar:fastutil-longhashmap:3.0-SNAPSHOT")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     implementation("io.papermc:paperlib:1.0.7")
-    implementation("co.aikar:idb-core:1.0.0-SNAPSHOT")
+    //implementation("co.aikar:idb-core:1.0.0-SNAPSHOT")
     implementation("com.zaxxer:HikariCP:5.0.1")
     implementation("org.bstats:bstats-bukkit:3.0.1")
     compileOnly("com.google.guava:guava:31.1-jre")

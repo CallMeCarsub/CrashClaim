@@ -1,5 +1,6 @@
 package net.crashcraft.crashclaim.listeners;
 
+import io.papermc.paper.event.player.PlayerOpenSignEvent;
 import net.crashcraft.crashclaim.claimobjects.BaseClaim;
 import net.crashcraft.crashclaim.claimobjects.Claim;
 import net.crashcraft.crashclaim.claimobjects.SubClaim;
@@ -685,6 +686,20 @@ public class PlayerListener implements Listener {
         }
 
         if (!helper.hasPermission(player.getUniqueId(), e.getBlock().getLocation(), PermissionRoute.BUILD)){
+            e.setCancelled(true);
+            visuals.sendAlert(player, Localization.ALERT__NO_PERMISSIONS__BUILD.getMessage(player));
+        }
+    }
+
+    @EventHandler (priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onBlockPlaceEvent(PlayerOpenSignEvent e){
+        Player player = e.getPlayer();
+
+        if (GlobalConfig.disabled_worlds.contains(player.getWorld().getUID())){
+            return;
+        }
+
+        if (!helper.hasPermission(player.getUniqueId(), e.getSign().getLocation(), PermissionRoute.BUILD)){
             e.setCancelled(true);
             visuals.sendAlert(player, Localization.ALERT__NO_PERMISSIONS__BUILD.getMessage(player));
         }
