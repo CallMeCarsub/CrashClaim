@@ -584,9 +584,9 @@ public class ClaimDataManager implements Listener {
         for (Claim claim : claims){
             saveClaim(claim);
             count++;
-            if(lastBump.isBefore(Instant.now().minusSeconds(30))){
+            if(lastBump.isBefore(Instant.now().minusSeconds(10))){
                 lastBump = Instant.now();
-                CrashClaim.getPlugin().getLogger().info("Just saved claim " + count + " of " + claims.size() + " - please wait.");
+                CrashClaim.getPlugin().getLogger().info("Just saved claim " + count + " of " + claims.size() + " - this is taking a while.");
             }
         }
     }
