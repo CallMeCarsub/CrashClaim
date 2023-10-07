@@ -53,6 +53,8 @@ public enum Localization {
 
     HIDE_CLAIMS__SUCCESS("<green>Claim visuals have been hidden."),
     SHOW_CLAIMS__SUCCESS("<green>Claim visuals have been shown."),
+    SHOW_CLAIMS_PLAYER__SUCCESS("<green>Claim visuals for specified player have been shown."),
+    SHOW_CLAIMS_PLAYER__FAILURE("<red>Could not find player with username for claim visuals."),
 
     CLAIM_TELEPORT__TELEPORT_OWN("<green>You have successfully teleported to your claim."),
     CLAIM_TELEPORT__TELEPORT_OTHER("<green>You have successfully teleported to the claim."),

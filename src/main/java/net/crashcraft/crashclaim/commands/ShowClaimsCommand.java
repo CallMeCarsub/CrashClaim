@@ -1,10 +1,8 @@
 package net.crashcraft.crashclaim.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
+import me.lucko.helper.utils.Players;
 import net.crashcraft.crashclaim.claimobjects.Claim;
 import net.crashcraft.crashclaim.data.ClaimDataManager;
 import net.crashcraft.crashclaim.localization.Localization;
@@ -12,6 +10,7 @@ import net.crashcraft.crashclaim.permissions.PermissionHelper;
 import net.crashcraft.crashclaim.permissions.PermissionRoute;
 import net.crashcraft.crashclaim.visualize.VisualizationManager;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 @CommandAlias("show")
@@ -27,9 +26,21 @@ public class ShowClaimsCommand extends BaseCommand {
     @Default
     @Subcommand("claims")
     @CommandPermission("crashclaim.user.show.claims")
-    public void showClaims(Player player){
-        visualizationManager.visualizeSurroundingClaims(player, claimDataManager);
-        player.spigot().sendMessage(Localization.SHOW_CLAIMS__SUCCESS.getMessage(player));
+    @Syntax("[player]")
+    @CommandCompletion("@players")
+    public void showClaims(Player player, String[] args){
+        if(args.length > 0){
+            OfflinePlayer targetPlayer = Players.getOfflineNullable(args[0]);
+            if(targetPlayer == null){
+                player.spigot().sendMessage(Localization.SHOW_CLAIMS_PLAYER__FAILURE.getMessage(player));
+                return;
+            }
+            visualizationManager.visualizedFilteredSurroundingClaims(player, claimDataManager, targetPlayer.getUniqueId());
+            player.spigot().sendMessage(Localization.SHOW_CLAIMS_PLAYER__SUCCESS.getMessage(player));
+        }else {
+            visualizationManager.visualizeSurroundingClaims(player, claimDataManager);
+            player.spigot().sendMessage(Localization.SHOW_CLAIMS__SUCCESS.getMessage(player));
+        }
     }
 
     @Subcommand("subclaims")

@@ -3,6 +3,7 @@ package net.crashcraft.crashclaim.visualize;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.crashcraft.crashclaim.CrashClaim;
 import net.crashcraft.crashclaim.claimobjects.Claim;
+import net.crashcraft.crashclaim.claimobjects.PermState;
 import net.crashcraft.crashclaim.claimobjects.SubClaim;
 import net.crashcraft.crashclaim.config.GlobalConfig;
 import net.crashcraft.crashclaim.data.ClaimDataManager;
@@ -111,6 +112,48 @@ public class VisualizationManager {
 
     public void deSpawnAfter(BaseVisual visual, int seconds){
         timeMap.put(visual, System.currentTimeMillis() + (seconds * 1000L));
+    }
+
+    public void visualizedFilteredSurroundingClaims(Player player, ClaimDataManager claimDataManager, UUID claimOwnerOrMember){
+        long chunkx = player.getLocation().getChunk().getX();
+        long chunkz = player.getLocation().getChunk().getZ();
+
+        Long2ObjectOpenHashMap<ArrayList<Integer>> chunks = claimDataManager.getClaimChunkMap(player.getWorld().getUID());
+
+        ArrayList<Integer> tempClaims = new ArrayList<>();
+
+        for (long x = chunkx - 6; x <= chunkx + 6; x++){
+            for (long z = chunkz + 6; z >= chunkz - 6; z--){
+                ArrayList<Integer> chu = chunks.get(StaticClaimLogic.getChunkHash(x, z));
+
+                if (chu == null) {
+                    continue;
+                }
+
+                for (Integer integer : chu){
+                    if (!tempClaims.contains(integer)) {
+                        tempClaims.add(integer);
+                    }
+                }
+            }
+        }
+
+        ArrayList<Claim> claims = new ArrayList<>();
+        for (Integer integer : tempClaims){
+            claims.add(claimDataManager.getClaim(integer));
+        }
+
+        VisualGroup group = fetchVisualGroup(player, true);
+        group.removeAllVisuals();
+
+        int y = player.getLocation().getBlockY() - 1;
+
+        for (Claim claim : claims){
+            if(claim.getOwner().equals(claimOwnerOrMember) || claim.getPerms().getPlayerPermissions().containsKey(claimOwnerOrMember) && claim.getPerms().getPlayerPermissions().get(claimOwnerOrMember).getBuild() == PermState.ENABLED) {
+                BaseVisual visual = getProvider(player.getUniqueId()).spawnClaimVisual(null, group, claim, y);
+                visual.spawn();
+            }
+        }
     }
 
     public void visualizeSurroundingClaims(Player player, ClaimDataManager claimDataManager){
