@@ -122,8 +122,8 @@ public class VisualizationManager {
 
         ArrayList<Integer> tempClaims = new ArrayList<>();
 
-        for (long x = chunkx - 6; x <= chunkx + 6; x++){
-            for (long z = chunkz + 6; z >= chunkz - 6; z--){
+        for (long x = chunkx - 8; x <= chunkx + 8; x++){
+            for (long z = chunkz + 8; z >= chunkz - 8; z--){
                 ArrayList<Integer> chu = chunks.get(StaticClaimLogic.getChunkHash(x, z));
 
                 if (chu == null) {
