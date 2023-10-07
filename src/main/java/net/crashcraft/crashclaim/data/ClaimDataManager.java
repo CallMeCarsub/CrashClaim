@@ -33,6 +33,7 @@ import org.cache2k.Cache2kBuilder;
 import org.cache2k.CacheEntry;
 import org.cache2k.IntCache;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CompletableFuture;
@@ -577,9 +578,16 @@ public class ClaimDataManager implements Listener {
 
     public void saveClaimsSync(){   //Force save all data - shutdown
         Collection<Claim> claims = claimLookup.asMap().values();
-
+        CrashClaim.getPlugin().getLogger().info("Beginning save routine of " + claims.size() + " claims - this may take a while.");
+        Instant lastBump = Instant.now();
+        long count = 0;
         for (Claim claim : claims){
             saveClaim(claim);
+            count++;
+            if(lastBump.isBefore(Instant.now().minusSeconds(30))){
+                lastBump = Instant.now();
+                CrashClaim.getPlugin().getLogger().info("Just saved claim " + count + " of " + claims.size() + " - please wait.");
+            }
         }
     }
 
