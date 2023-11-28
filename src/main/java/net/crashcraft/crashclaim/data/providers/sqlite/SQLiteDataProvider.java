@@ -237,6 +237,8 @@ public class SQLiteDataProvider implements DataProvider {
                     claim.getMinX(), claim.getMinZ(), claim.getMaxX(), claim.getMaxZ(), claim.getLowerBoundY(), claim.getWorld().toString(),
                     claim.getOwner()
             );
+
+            DB.executeUpdate("UPDATE claims SET players_id = (SELECT id FROM players WHERE uuid = ?) WHERE id = ?", claim.getOwner(), claim.getId());
 //            System.out.println("CHECKPOINT E" + " " + (System.currentTimeMillis()-lastTime) + "ms"); lastTime = System.currentTimeMillis();
 
             //Claim permissions

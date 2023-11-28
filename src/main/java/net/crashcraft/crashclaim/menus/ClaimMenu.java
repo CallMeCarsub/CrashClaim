@@ -12,6 +12,7 @@ import net.crashcraft.crashclaim.localization.Localization;
 import net.crashcraft.crashclaim.menus.helpers.InputPrompt;
 import net.crashcraft.crashclaim.menus.list.PlayerPermListMenu;
 import net.crashcraft.crashclaim.menus.list.SubClaimListMenu;
+import net.crashcraft.crashclaim.menus.list.TransferOwnershipListMenu;
 import net.crashcraft.crashclaim.menus.permissions.SimplePermissionMenu;
 import net.crashcraft.crashclaim.permissions.PermissionHelper;
 import net.crashcraft.crashclaim.permissions.PermissionRoute;
@@ -75,6 +76,10 @@ public class ClaimMenu extends GUI {
         descItem.setType(GlobalConfig.visual_menu_items.getOrDefault(claim.getWorld(), Material.OAK_FENCE));
         inv.setItem(13, descItem);
 
+        if(claim.getOwner().equals(getPlayer().getUniqueId()) || PermissionHelper.getPermissionHelper().getBypassManager().isBypass(getPlayer().getUniqueId())){
+            inv.setItem(22, Localization.MENU__CLAIM__TRANSFER.getItem(player));
+        }
+
         if (helper.hasPermission(claim, getPlayer().getUniqueId(), PermissionRoute.MODIFY_PERMISSIONS)) {
             inv.setItem(28, Localization.MENU__PERMISSIONS__BUTTONS__PER_PLAYER.getItem(player));
             inv.setItem(29, Localization.MENU__PERMISSIONS__BUTTONS__GLOBAL.getItem(player));
@@ -123,6 +128,14 @@ public class ClaimMenu extends GUI {
     @Override
     public void onClick(InventoryClickEvent event, String rawItemName) {
         switch (event.getSlot()){
+            case 22:
+                if(claim.getOwner().equals(getPlayer().getUniqueId()) || PermissionHelper.getPermissionHelper().getBypassManager().isBypass(getPlayer().getUniqueId())){
+                    new TransferOwnershipListMenu(claim, getPlayer(), this);
+                }else {
+                    player.spigot().sendMessage(Localization.MENU__GENERAL__INSUFFICIENT_PERMISSION.getMessage(player));
+                    forceClose();
+                }
+                break;
             case 28:
                 if (helper.hasPermission(claim, getPlayer().getUniqueId(), PermissionRoute.MODIFY_PERMISSIONS)) {
                     new PlayerPermListMenu(claim, getPlayer(), this);

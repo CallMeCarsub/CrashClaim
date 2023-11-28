@@ -263,6 +263,18 @@ public enum Localization {
     MENU__GENERAL__BACK_BUTTON(Material.ARROW, 1, "<gold>Back"),
 
     MENU__LIST_PLAYERS__TITLE("Select Player"),
+    MENU_LIST_TRANSFER_OWNER__TITLE("Transfer Ownership"),
+
+    TRANSFER_OWNER__MENU__CONFIRMATION__TITLE("Confirm Ownership Transfer"),
+    TRANSFER_OWNER__MENU__CONFIRMATION__MESSAGE(Material.REDSTONE, 1,
+            "<dark_red>Transfer Ownership?",
+            "<red>All contributed currency will be transferred ",
+            "<red>to the new owner.",
+            "<red>THIS CANNOT BE UNDONE!"),
+    TRANSFER_OWNER__MENU__CONFIRMATION__ACCEPT(Material.GREEN_CONCRETE, 1, "<gold>Transfer"),
+    TRANSFER_OWNER__MENU__CONFIRMATION__DENY(Material.RED_CONCRETE, 1, "<gold>Cancel"),
+
+    TRANSFER_OWNER__SUCCESS("<green>Claim ownership transfer successful."),
 
     // Claim
     MENU__CLAIM__TITLE("Claim Settings"),
@@ -286,6 +298,11 @@ public enum Localization {
     MENU__PERMISSIONS__BUTTONS__PER_PLAYER(Material.PLAYER_HEAD, 1,
             "<gold>Per Player Settings",
             "<green>Edit claim permissions on a per player basis"),
+
+    MENU__CLAIM__TRANSFER(Material.CHEST_MINECART, 1,
+            "<red>Transfer Claim Ownership",
+            "<green>Permanently transfer claim ownership",
+            "<green>to another player"),
     MENU__PERMISSIONS__BUTTONS__PER_PLAYER_DISABLED(Material.PLAYER_HEAD, 1,
             "<gray>Per Player Settings",
             "<dark_gray>Edit claim permissions on a per player basis"),
