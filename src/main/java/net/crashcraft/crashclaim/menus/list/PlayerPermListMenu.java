@@ -2,20 +2,25 @@ package net.crashcraft.crashclaim.menus.list;
 
 import dev.whip.crashutils.menusystem.GUI;
 import dev.whip.crashutils.menusystem.defaultmenus.PlayerListMenu;
+import net.crashcraft.crashclaim.CrashClaim;
 import net.crashcraft.crashclaim.claimobjects.BaseClaim;
 import net.crashcraft.crashclaim.claimobjects.Claim;
 import net.crashcraft.crashclaim.claimobjects.SubClaim;
+import net.crashcraft.crashclaim.claimobjects.permission.PlayerPermissionSet;
+import net.crashcraft.crashclaim.claimobjects.permission.parent.ParentPermissionGroup;
+import net.crashcraft.crashclaim.data.ClaimDataManager;
 import net.crashcraft.crashclaim.localization.Localization;
 import net.crashcraft.crashclaim.menus.permissions.SimplePermissionMenu;
 import net.crashcraft.crashclaim.permissions.PermissionHelper;
 import net.crashcraft.crashclaim.permissions.PermissionRoute;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
+import org.checkerframework.checker.units.qual.A;
 
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerPermListMenu {
     public PlayerPermListMenu(BaseClaim claim, Player viewer, GUI previous){
@@ -28,13 +33,22 @@ public class PlayerPermListMenu {
 
         ArrayList<UUID> uuids = new ArrayList<>(claim.getPerms().getPlayerPermissions().keySet());
 
+        // get rid of any permission entries that do fucking nothing
+        uuids.removeIf(uuid -> {
+            PlayerPermissionSet permissionSet = claim.getPerms().getPlayerPermissions().get(uuid);
+            return permissionSet == null || permissionSet.isDefault();
+        });
+
         for (Player player : Bukkit.getOnlinePlayers()){
-            if (isVanished(player)){
+            if (isVanished(player) || !player.getWorld().getUID().equals(claim.getWorld())){
                 continue;
             }
 
             if (!uuids.contains(player.getUniqueId())) {
-                uuids.add(player.getUniqueId());
+                Claim claimAt = CrashClaim.getPlugin().getDataManager().getClaim(player.getLocation());
+                if(claimAt.getId() == claim.getId()) {
+                    uuids.add(player.getUniqueId());
+                }
             }
         }
 
@@ -50,7 +64,18 @@ public class PlayerPermListMenu {
             throw new RuntimeException("Claim was not of known type.");
         }
 
-        new PlayerListMenu(BaseComponent.toLegacyText(Localization.MENU__LIST_PLAYERS__TITLE.getMessage(null)), viewer, previous, uuids, (gui, uuid) -> {
+        Map<String, UUID> names = new HashMap<>();
+        List<String> nameList = new ArrayList<>();
+        uuids.forEach(uuid -> {
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+            names.put(offlinePlayer.getName(), uuid);
+            nameList.add(offlinePlayer.getName());
+        });
+        nameList.sort(Comparator.comparing(s -> s.toLowerCase(Locale.ENGLISH)));
+        ArrayList<UUID> finalUUIDS = new ArrayList<>();
+        nameList.forEach(name -> finalUUIDS.add(names.get(name)));
+
+        new PlayerListMenu(BaseComponent.toLegacyText(Localization.MENU__LIST_PLAYERS__TITLE.getMessage(null)), viewer, previous, finalUUIDS, (gui, uuid) -> {
             new SimplePermissionMenu(viewer, claim, uuid, gui).open();
             return "";
         }).open();

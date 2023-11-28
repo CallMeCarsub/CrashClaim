@@ -21,8 +21,7 @@ public class ParentPermissionGroup extends PermissionGroup {
 
     @Override
     public PlayerPermissionSet createPlayerPermissionSet() {
-        return new PlayerPermissionSet(PermState.NEUTRAL, PermState.NEUTRAL, PermState.NEUTRAL, PermState.NEUTRAL, PermState.NEUTRAL, PermState.NEUTRAL,
-                new HashMap<>(), PermState.NEUTRAL, PermState.DISABLE, PermState.DISABLE);
+        return PlayerPermissionSet.createDefault();
     }
 
     @Override

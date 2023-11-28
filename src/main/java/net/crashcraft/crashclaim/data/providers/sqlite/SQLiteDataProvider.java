@@ -203,10 +203,12 @@ public class SQLiteDataProvider implements DataProvider {
     @Override
     public void saveClaim(Claim claim) {
         try {
+//            long lastTime = System.currentTimeMillis();
+//            System.out.println("CHECKPOINT A");
             addPlayer(claim.getOwner()); //Make sure owner is in db
-
+//            System.out.println("CHECKPOINT B" + " " + (System.currentTimeMillis()-lastTime) + "ms"); lastTime = System.currentTimeMillis();
             Integer claimData_id = DB.getFirstColumn("SELECT data FROM claims WHERE id = ?", claim.getId());
-
+//            System.out.println("CHECKPOINT C" + " " + (System.currentTimeMillis()-lastTime) + "ms"); lastTime = System.currentTimeMillis();
             if (claimData_id == null){
                 claimData_id = -1;
             }
@@ -225,6 +227,7 @@ public class SQLiteDataProvider implements DataProvider {
                     claim.getExitMessage(),
                     DataType.CLAIM
             );
+//            System.out.println("CHECKPOINT D" + " " + (System.currentTimeMillis()-lastTime) + "ms"); lastTime = System.currentTimeMillis();
 
             //Claim
             DB.executeUpdate("INSERT OR IGNORE INTO claims(id, data, players_id) VALUES (?, " +
@@ -234,12 +237,15 @@ public class SQLiteDataProvider implements DataProvider {
                     claim.getMinX(), claim.getMinZ(), claim.getMaxX(), claim.getMaxZ(), claim.getLowerBoundY(), claim.getWorld().toString(),
                     claim.getOwner()
             );
+//            System.out.println("CHECKPOINT E" + " " + (System.currentTimeMillis()-lastTime) + "ms"); lastTime = System.currentTimeMillis();
 
             //Claim permissions
             if (claimData_id == -1) {
                 claimData_id = DB.getFirstColumn("SELECT data FROM claims WHERE claims.id = ?", claim.getId());
             }
+//            System.out.println("CHECKPOINT F" + " " + (System.currentTimeMillis()-lastTime) + "ms"); lastTime = System.currentTimeMillis();
             savePermissions(claimData_id, claim.getPerms());
+//            System.out.println("CHECKPOINT G" + " " + (System.currentTimeMillis()-lastTime) + "ms"); lastTime = System.currentTimeMillis();
 
             //Sub Claim
             for (SubClaim subClaim : claim.getSubClaims()) {
@@ -276,23 +282,28 @@ public class SQLiteDataProvider implements DataProvider {
                 }
                 savePermissions(subClaimData_id, subClaim.getPerms());
             }
+//            System.out.println("CHECKPOINT H" + " " + (System.currentTimeMillis()-lastTime) + "ms"); lastTime = System.currentTimeMillis();
 
             //Fetch and delete outdated subClaims
             List<Integer> list = DB.getFirstColumnResults("SELECT id FROM subclaims WHERE claim_id = ?", claim.getId());
             for (SubClaim subClaim : claim.getSubClaims()){
                 list.remove(Integer.valueOf(subClaim.getId()));
             }
+//            System.out.println("CHECKPOINT I" + " " + (System.currentTimeMillis()-lastTime) + "ms"); lastTime = System.currentTimeMillis();
 
             //Remove deleted subClaim data from database
             for (Integer removableSubClaim : list){
                 DB.executeUpdate("DELETE FROM claim_data WHERE id = (SELECT data FROM subclaims WHERE subclaims.id = ?)", removableSubClaim);
             }
+//            System.out.println("CHECKPOINT J" + " " + (System.currentTimeMillis()-lastTime) + "ms"); lastTime = System.currentTimeMillis();
 
             //Contributions
             for (Map.Entry<UUID, Integer> entry : claim.getContribution().entrySet()) {
                 DB.executeUpdate("INSERT INTO contributions(data_id, players_id, amount) VALUES (?, (SELECT id FROM players WHERE uuid = ?), ?) ON CONFLICT (data_id, players_id) DO UPDATE SET amount = ?",
                         claimData_id, entry.getKey().toString(), entry.getValue(), entry.getValue());
             }
+//            System.out.println("CHECKPOINT K" + " " + (System.currentTimeMillis()-lastTime) + "ms"); lastTime = System.currentTimeMillis();
+//            System.out.println("\n-------------------\n");
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -334,6 +345,7 @@ public class SQLiteDataProvider implements DataProvider {
         for (Map.Entry<UUID, PlayerPermissionSet> entry : group.getPlayerPermissions().entrySet()){
             UUID uuid = entry.getKey();
             PlayerPermissionSet perms = entry.getValue();
+            if(perms.isDefault()) continue;
 
             addPlayer(uuid); // Make sure player is in db
 
