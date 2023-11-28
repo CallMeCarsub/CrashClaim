@@ -46,7 +46,7 @@ public class PlayerPermListMenu {
 
             if (!uuids.contains(player.getUniqueId())) {
                 Claim claimAt = CrashClaim.getPlugin().getDataManager().getClaim(player.getLocation());
-                if(claimAt.getId() == claim.getId()) {
+                if(claimAt != null && claimAt.getId() == claim.getId()) {
                     uuids.add(player.getUniqueId());
                 }
             }
