@@ -96,10 +96,26 @@ public class TransferOwnershipListMenu {
                                     ownerSet.setModifyPermissions(PermState.ENABLED);
                                     ownerSet.setTeleportation(PermState.ENABLED);
                                     ownerSet.setViewSubClaims(PermState.ENABLED);
+                                    claim.getPerms().getPlayerPermissions().put(claim.getOwner(), ownerSet);
                                 }else{
                                     // remove old owner perms for staff transfers
                                     claim.getPerms().getPlayerPermissions().remove(claim.getOwner());
                                 }
+
+                                PlayerPermissionSet newOwnerSet = claim.getPerms().getPlayerPermissions().get(uuid);
+                                if(newOwnerSet == null){
+                                    newOwnerSet = PlayerPermissionSet.createDefault();
+                                }
+                                newOwnerSet.setDefaultConatinerValue(PermState.ENABLED);
+                                newOwnerSet.setBuild(PermState.ENABLED);
+                                newOwnerSet.setModifyClaim(PermState.ENABLED);
+                                newOwnerSet.setEntities(PermState.ENABLED);
+                                newOwnerSet.setInteractions(PermState.ENABLED);
+                                newOwnerSet.setModifyPermissions(PermState.ENABLED);
+                                newOwnerSet.setTeleportation(PermState.ENABLED);
+                                newOwnerSet.setViewSubClaims(PermState.ENABLED);
+                                claim.getPerms().getPlayerPermissions().put(uuid, newOwnerSet);
+
                                 claim.getContribution().put(uuid, claim.getContribution().remove(claim.getOwner()));
                                 OfflinePlayer originalOwner = Bukkit.getOfflinePlayer(claim.getOwner());
                                 OfflinePlayer newOwner = Bukkit.getOfflinePlayer(uuid);
