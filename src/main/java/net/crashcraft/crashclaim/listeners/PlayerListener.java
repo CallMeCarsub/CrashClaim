@@ -281,7 +281,9 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.UNKNOWN)){
+        // Only block teleporting with items cause why the hell would we care if someone's being teleported
+        if (!event.getCause().equals(PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT) &&
+                !event.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL)){
             return;
         }
 
