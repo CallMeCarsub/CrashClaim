@@ -20,6 +20,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -130,7 +131,32 @@ public class ClaimMenu extends GUI {
         switch (event.getSlot()){
             case 22:
                 if(claim.getOwner().equals(getPlayer().getUniqueId()) || PermissionHelper.getPermissionHelper().getBypassManager().isBypass(getPlayer().getUniqueId())){
-                    new TransferOwnershipListMenu(claim, getPlayer(), this);
+                    if(event.getClick().isLeftClick()){
+                        new TransferOwnershipListMenu(claim, getPlayer(), this);
+                    }else if(event.getClick().isRightClick()){
+                        forceClose();
+                        InputPrompt.of(getPlayer(), LegacyComponentSerializer.legacyAmpersand().serialize(Localization.MENU__CLAIM__TRANSFER__MESSAGE.getComponent(player)),
+                                (input) -> {
+                                    OfflinePlayer playerLookup = Bukkit.getOfflinePlayerIfCached(input);
+                                    if(playerLookup != null && (playerLookup.hasPlayedBefore() || playerLookup.isOnline())) {
+                                        return true;
+                                    }else {
+                                        player.spigot().sendMessage(Localization.MENU__CLAIM__TRANSFER_BAD_USERNAME__MESSAGE.getMessage(player));
+                                        return false;
+                                    }
+                                }, (result) -> {
+                                    if(result == null) {
+                                        Players.msg(player, "&cTransfer timed out.");
+                                        return;
+                                    }
+                                    OfflinePlayer playerLookup = Bukkit.getOfflinePlayerIfCached(result);
+                                    if(playerLookup != null && (playerLookup.hasPlayedBefore() || playerLookup.isOnline())) {
+                                        TransferOwnershipListMenu.handleTransferConfirmation(getPlayer(), getPlayer().getUniqueId(), claim, playerLookup.getUniqueId());
+                                    }else{
+                                        player.spigot().sendMessage(Localization.MENU__CLAIM__TRANSFER_BAD_USERNAME_FATAL__MESSAGE.getMessage(player));
+                                    }
+                                }).start();
+                    }
                 }else {
                     player.spigot().sendMessage(Localization.MENU__GENERAL__INSUFFICIENT_PERMISSION.getMessage(player));
                     forceClose();

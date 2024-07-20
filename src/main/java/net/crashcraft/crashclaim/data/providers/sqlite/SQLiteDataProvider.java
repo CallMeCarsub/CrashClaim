@@ -344,14 +344,27 @@ public class SQLiteDataProvider implements DataProvider {
 
         addContainers(data_id, -1, global.getContainers());
 
+        for(UUID uuid : group.getPlayersCleared()){
+            if(group.getPlayerPermissions().containsKey(uuid)) continue;
+            addPlayer(uuid); // Make sure player is in db
+
+            int player_id = DB.getFirstColumn("SELECT id FROM players WHERE uuid = ?", uuid.toString());
+            DB.executeUpdate("DELETE FROM permission_set WHERE data_id = ? AND players_id = ?", data_id, player_id);
+        }
+
         for (Map.Entry<UUID, PlayerPermissionSet> entry : group.getPlayerPermissions().entrySet()){
             UUID uuid = entry.getKey();
             PlayerPermissionSet perms = entry.getValue();
-            if(perms.isDefault()) continue;
+
 
             addPlayer(uuid); // Make sure player is in db
 
             int player_id = DB.getFirstColumn("SELECT id FROM players WHERE uuid = ?", uuid.toString());
+
+            if(perms.isDefault()){
+                DB.executeUpdate("DELETE FROM permission_set WHERE data_id = ? AND players_id = ?", data_id, player_id);
+                continue;
+            }
 
             DB.executeUpdate("INSERT INTO permission_set(data_id, players_id, build, interactions, entities, teleportation, defaultContainer, viewSubClaims, modifyPermissions, modifyClaim) " +
                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (data_id, players_id) DO UPDATE SET " +

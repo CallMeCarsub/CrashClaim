@@ -6,6 +6,8 @@ import net.crashcraft.crashclaim.permissions.PermissionRoute;
 import org.bukkit.Material;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public abstract class PermissionGroup {
@@ -17,6 +19,7 @@ public abstract class PermissionGroup {
     private GlobalPermissionSet globalPermissionSet;
 
     private HashMap<UUID, PlayerPermissionSet> playerPermissions;
+    private Set<UUID> playersCleared = new HashSet<>();
 
     private BaseClaim owner;
 
@@ -63,6 +66,10 @@ public abstract class PermissionGroup {
 
     public HashMap<UUID, PlayerPermissionSet> getPlayerPermissions(){
         return playerPermissions;
+    }
+
+    public Set<UUID> getPlayersCleared() {
+        return playersCleared;
     }
 
     public void setOwner(BaseClaim owner){

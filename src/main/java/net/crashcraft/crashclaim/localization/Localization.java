@@ -264,6 +264,9 @@ public enum Localization {
 
     MENU__LIST_PLAYERS__TITLE("Select Player"),
     MENU_LIST_TRANSFER_OWNER__TITLE("Transfer Ownership"),
+    MENU__CLAIM__TRANSFER__MESSAGE("<green>Enter new claim owner name, or type <gold>\"cancel\" <green>to cancel."),
+    MENU__CLAIM__TRANSFER_BAD_USERNAME__MESSAGE("<red>Invalid username provided, please try again."),
+    MENU__CLAIM__TRANSFER_BAD_USERNAME_FATAL__MESSAGE("<red>Couldn't find player, please restart process."),
 
     TRANSFER_OWNER__MENU__CONFIRMATION__TITLE("Confirm Ownership Transfer"),
     TRANSFER_OWNER__MENU__CONFIRMATION__MESSAGE(Material.REDSTONE, 1,
@@ -302,7 +305,10 @@ public enum Localization {
     MENU__CLAIM__TRANSFER(Material.CHEST_MINECART, 1,
             "<red>Transfer Claim Ownership",
             "<green>Permanently transfer claim ownership",
-            "<green>to another player"),
+            "<green>to another player",
+            "<reset",
+            "<yellow>Left-click for Player list",
+            "<yellow>Right-click to input Player name"),
     MENU__PERMISSIONS__BUTTONS__PER_PLAYER_DISABLED(Material.PLAYER_HEAD, 1,
             "<gray>Per Player Settings",
             "<dark_gray>Edit claim permissions on a per player basis"),
